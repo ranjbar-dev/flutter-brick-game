@@ -20,7 +20,7 @@ class Arena extends BodyComponent<MyGame> {
   Body createBody() {
     final bodyDef = BodyDef(
       position: Vector2(0, 0),
-       type: BodyType.static,
+      type: BodyType.static,
     );
 
     final arenaBody = world.createBody(bodyDef);
@@ -37,9 +37,10 @@ class Arena extends BodyComponent<MyGame> {
     for (var index = 0; index < chain.childCount; index++) {
       arenaBody.createFixture(FixtureDef(
         chain.childEdge(index),
-        density: 2000.0,
-        friction: 0.0,
-        restitution : 1.0,
+        density: 1.0,
+        friction: 0.7,
+        restitution : 0.0,
+        userData: this
       ));
     }
 

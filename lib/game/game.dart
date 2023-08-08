@@ -1,55 +1,55 @@
-import 'package:flame/game.dart';
+import 'package:flame/events.dart';
 import 'package:flame_forge2d/flame_forge2d.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:game/game/arena.dart';
-import 'package:game/game/items/ball.dart';
-import 'package:game/game/items/brick_wall.dart';
-import 'package:flame/extensions.dart';
-import 'package:game/game/items/paddle.dart';
+import 'package:game/game/player/player.dart';
 
-class MyGame extends Forge2DGame with HasDraggables  {
+class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
 
-  MyGame() : super(gravity: Vector2(0.0, 0.0), zoom: 20);
+  MyGame() : super(gravity: Vector2(0.0, 50.0), zoom: 10);
 
-  late final Ball _ball;
+  late Player player ;
+  late Arena arena ;
 
   @override
   Future<void> onLoad() async {
-    await _initializeGame();
-
-    _ball.body.applyLinearImpulse(Vector2(-10, -10));
+    await _initializeGame(); 
   }
 
   Future<void> _initializeGame() async {
 
-    final arena = Arena();
+    arena = Arena();
     await add(arena);
 
-    final brickWallPosition = Vector2(0.0, size.y * 0.075);
-
-    final brickWall = BrickWall(
-      position: brickWallPosition,
-      rows: 8,
-      columns: 6,
-    );
-    await add(brickWall);
-
-    _ball = Ball(
-      radius: 0.5,
-      position: size / 2,
-    );
-    await add(_ball);
-
-    const paddleSize = Size(4.0, 0.8);
-  final paddlePosition = Vector2(
-   size.x / 2.0,
-   size.y * 0.85,
-  );
-
-  final paddle = Paddle(
-   size: paddleSize,
-   position: paddlePosition,
-  );
-  await add(paddle);
-
+    player = Player();
+    await add(player); 
   }
+
+    @override
+  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
+    
+    super.onKeyEvent(event, keysPressed);
+
+    // handle jump 
+    if (event is RawKeyDownEvent) {
+      if (event.logicalKey == LogicalKeyboardKey.keyW) {
+        if (player.state != PlayerState.jump && player.state != PlayerState.fall) {
+          player.jump();
+        }
+      }
+    }
+
+    // handle right/left move
+    if (keysPressed.contains(LogicalKeyboardKey.keyD)) {
+      player.walkRight();
+    } else if (keysPressed.contains(LogicalKeyboardKey.keyA)) {
+      player.walkLeft();
+    } else {
+      player.idle();
+    }
+
+    return KeyEventResult.handled;
+  }
+  
 }
