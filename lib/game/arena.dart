@@ -35,13 +35,8 @@ class Arena extends BodyComponent<MyGame> {
     final chain = ChainShape()..createLoop(vertices);
 
     for (var index = 0; index < chain.childCount; index++) {
-      arenaBody.createFixture(FixtureDef(
-        chain.childEdge(index),
-        density: 1.0,
-        friction: 0.7,
-        restitution : 0.0,
-        userData: this
-      ));
+      arenaBody.createFixture(FixtureDef(chain.childEdge(index),
+          density: 1.0, friction: 0.7, restitution: 0.0, userData: this));
     }
 
     return arenaBody;

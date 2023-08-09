@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:game/game/game.dart';
 
 void main() {
-  final game = MyGame() ;
-  runApp(GameWidget(
-    game: game
-  ));
+  final game = MyGame();
+  runApp(GameWidget(game: game));
 }

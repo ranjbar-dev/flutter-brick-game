@@ -6,35 +6,34 @@ import 'package:game/game/arena.dart';
 import 'package:game/game/player/player.dart';
 
 class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
-
   MyGame() : super(gravity: Vector2(0.0, 50.0), zoom: 10);
 
-  late Player player ;
-  late Arena arena ;
+  late Player player;
+  late Arena arena;
 
   @override
   Future<void> onLoad() async {
-    await _initializeGame(); 
+    await _initializeGame();
   }
 
   Future<void> _initializeGame() async {
-
     arena = Arena();
     await add(arena);
 
     player = Player();
-    await add(player); 
+    await add(player);
   }
 
-    @override
-  KeyEventResult onKeyEvent(RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
-    
+  @override
+  KeyEventResult onKeyEvent(
+      RawKeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
     super.onKeyEvent(event, keysPressed);
 
-    // handle jump 
+    // handle jump
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.keyW) {
-        if (player.state != PlayerState.jump && player.state != PlayerState.fall) {
+        if (player.state != PlayerState.jump &&
+            player.state != PlayerState.fall) {
           player.jump();
         }
       }
@@ -51,5 +50,4 @@ class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
 
     return KeyEventResult.handled;
   }
-  
 }
