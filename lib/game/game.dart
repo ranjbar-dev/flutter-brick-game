@@ -6,7 +6,7 @@ import 'package:game/game/arena.dart';
 import 'package:game/game/player/player.dart';
 
 class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
-  MyGame() : super(gravity: Vector2(0.0, 50.0), zoom: 10);
+  MyGame() : super(gravity: Vector2(0.0, 100.0), zoom: 10);
 
   late Player player;
   late Arena arena;
@@ -32,10 +32,7 @@ class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
     // handle jump
     if (event is RawKeyDownEvent) {
       if (event.logicalKey == LogicalKeyboardKey.keyW) {
-        if (player.state != PlayerState.jump &&
-            player.state != PlayerState.fall) {
-          player.jump();
-        }
+        player.jump();
       }
     }
 
@@ -44,6 +41,8 @@ class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
       player.walkRight();
     } else if (keysPressed.contains(LogicalKeyboardKey.keyA)) {
       player.walkLeft();
+    } else if (keysPressed.contains(LogicalKeyboardKey.keyS)) {
+      player.duck();
     } else {
       player.idle();
     }

@@ -1,7 +1,6 @@
 import 'package:flame/components.dart';
-import 'package:flame_forge2d/flame_forge2d.dart'; 
+import 'package:flame_forge2d/flame_forge2d.dart';
 import 'package:game/game/game.dart';
-import 'package:game/game/player/movement.dart';
 
 enum PlayerState {
   duck,
@@ -11,12 +10,46 @@ enum PlayerState {
   walk,
 }
 
-class Player extends BodyComponent<MyGame> with KeyboardHandler, PlayerMovement {
+class Player extends BodyComponent<MyGame> with KeyboardHandler {
+  double moveSpeed = 20;
+
+  double jumpPower = 40;
+
+  int accelerationX = 0;
+
+  int accelerationY = 0;
+
+  bool isDucking = false;
+
+  void idle() {
+    accelerationX = 0;
+    isDucking = false;
+  }
+
+  void walkLeft() {
+    accelerationX = -1;
+  }
+
+  void walkRight() {
+    accelerationX = 1;
+  }
+
+  void duck() {
+    isDucking = true;
+  }
+
+  void jump() {
+    if (state == PlayerState.jump || state == PlayerState.fall) {
+      return;
+    }
+
+    accelerationY = 1;
+    state = PlayerState.jump;
+  }
 
   final _componentPosition = Vector2(0, -10);
   final _size = Vector2(20, 20);
-  PlayerState state = PlayerState.idle ; 
-  bool isDucking = false;
+  PlayerState state = PlayerState.idle;
 
   late Component currentComponent;
   late final SpriteComponent duckComponent;
@@ -27,18 +60,16 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler, PlayerMovement 
 
   @override
   Body createBody() {
-
     final bodyDef = BodyDef(
       userData: this,
       position: Vector2(gameRef.size.x / 2, gameRef.size.y - 3),
       type: BodyType.dynamic,
     );
-    
-    final shape = PolygonShape()
-      ..setAsBoxXY(_size.x / 2, .90);
+
+    final shape = PolygonShape()..setAsBoxXY(_size.x / 2, .90);
 
     final fixtureDef = FixtureDef(shape)
-      ..density = 15
+      ..density = 10
       ..friction = 0
       ..restitution = 0;
 
@@ -47,7 +78,6 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler, PlayerMovement 
 
   @override
   Future<void> onLoad() async {
-
     renderBody = false;
 
     final duck = await gameRef.loadSprite('player/duck.png');
@@ -115,27 +145,24 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler, PlayerMovement 
 
     return super.onLoad();
   }
-  
+
   @override
   void update(double dt) {
-
     super.update(dt);
 
     final velocity = body.linearVelocity;
 
-    // handle movement 
-    velocity.x = accelerationX * moveSpeed ;
+    // handle movement
+    velocity.x = accelerationX * moveSpeed;
 
-    // handle jump action 
-    if( accelerationY == 1 ){
-      velocity.y = - accelerationY * jumpPower;
-      accelerationY = 0 ;
+    // handle jump action
+    if (accelerationY == 1) {
+      velocity.y = -accelerationY * jumpPower;
+      accelerationY = 0;
     }
 
     // update body velocity
     body.linearVelocity = velocity;
-
-
 
     if (velocity.y > 0.1) {
       state = PlayerState.fall;
@@ -178,5 +205,4 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler, PlayerMovement 
     currentComponent = component;
     add(component);
   }
-  
 }
