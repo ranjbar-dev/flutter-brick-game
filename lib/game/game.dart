@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:game/game/arena.dart';
 import 'package:game/game/player/player.dart';
+import 'package:game/platform/platform.dart';
 
 class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
   MyGame() : super(gravity: Vector2(0.0, 100.0), zoom: 10);
@@ -22,6 +23,11 @@ class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
 
     player = Player();
     await add(player);
+
+    var platform = Platform(x: size.x / 3, y: size.y / 1.1);
+    await add(platform);
+
+    camera.followBodyComponent(player);
   }
 
   @override

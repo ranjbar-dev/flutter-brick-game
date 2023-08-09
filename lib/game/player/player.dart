@@ -21,34 +21,8 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler {
 
   bool isDucking = false;
 
-  void idle() {
-    accelerationX = 0;
-    isDucking = false;
-  }
-
-  void walkLeft() {
-    accelerationX = -1;
-  }
-
-  void walkRight() {
-    accelerationX = 1;
-  }
-
-  void duck() {
-    isDucking = true;
-  }
-
-  void jump() {
-    if (state == PlayerState.jump || state == PlayerState.fall) {
-      return;
-    }
-
-    accelerationY = 1;
-    state = PlayerState.jump;
-  }
-
-  final _componentPosition = Vector2(0, -10);
-  final _size = Vector2(20, 20);
+  final _componentPosition = Vector2(0, -.325);
+  final _size = Vector2(1.80, 2.4);
   PlayerState state = PlayerState.idle;
 
   late Component currentComponent;
@@ -62,7 +36,7 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler {
   Body createBody() {
     final bodyDef = BodyDef(
       userData: this,
-      position: Vector2(gameRef.size.x / 2, gameRef.size.y - 3),
+      position: Vector2(gameRef.size.x / 2, gameRef.size.y - 10),
       type: BodyType.dynamic,
     );
 
@@ -73,13 +47,13 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler {
       ..friction = 0
       ..restitution = 0;
 
-    return world.createBody(bodyDef)..createFixture(fixtureDef);
+    return world.createBody(bodyDef)
+      ..createFixture(fixtureDef)
+      ..setFixedRotation(true);
   }
 
   @override
   Future<void> onLoad() async {
-    renderBody = false;
-
     final duck = await gameRef.loadSprite('player/duck.png');
     final fall = await gameRef.loadSprite('player/fall.png');
     final idle = await gameRef.loadSprite('player/idle.png');
@@ -204,5 +178,31 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler {
     remove(currentComponent);
     currentComponent = component;
     add(component);
+  }
+
+  void idle() {
+    accelerationX = 0;
+    isDucking = false;
+  }
+
+  void walkLeft() {
+    accelerationX = -1;
+  }
+
+  void walkRight() {
+    accelerationX = 1;
+  }
+
+  void duck() {
+    isDucking = true;
+  }
+
+  void jump() {
+    if (state == PlayerState.jump || state == PlayerState.fall) {
+      return;
+    }
+
+    accelerationY = 1;
+    state = PlayerState.jump;
   }
 }

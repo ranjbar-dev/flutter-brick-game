@@ -36,7 +36,7 @@ class Arena extends BodyComponent<MyGame> {
 
     for (var index = 0; index < chain.childCount; index++) {
       arenaBody.createFixture(FixtureDef(chain.childEdge(index),
-          density: 1.0, friction: 0.7, restitution: 0.0, userData: this));
+          density: 2000.0, friction: 0.7, restitution: 0.0, userData: this));
     }
 
     return arenaBody;
