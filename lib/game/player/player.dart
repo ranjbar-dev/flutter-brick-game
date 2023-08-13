@@ -54,6 +54,7 @@ class Player extends BodyComponent<MyGame> with KeyboardHandler {
 
   @override
   Future<void> onLoad() async {
+    renderBody = false;
     final duck = await gameRef.loadSprite('player/duck.png');
     final fall = await gameRef.loadSprite('player/fall.png');
     final idle = await gameRef.loadSprite('player/idle.png');

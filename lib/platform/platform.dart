@@ -16,7 +16,7 @@ class Platform extends BodyComponent {
     add(
       SpriteComponent(
         sprite: sprite,
-        size: Vector2(2.0, 0.5),
+        size: Vector2(8.0, 0.5),
         anchor: Anchor.center,
       ),
     );

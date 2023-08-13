@@ -7,7 +7,7 @@ import 'package:game/game/player/player.dart';
 import 'package:game/platform/platform.dart';
 
 class MyGame extends Forge2DGame with HasKeyboardHandlerComponents {
-  MyGame() : super(gravity: Vector2(0.0, 100.0), zoom: 10);
+  MyGame() : super(gravity: Vector2(0.0, 100.0), zoom: 20);
 
   late Player player;
   late Arena arena;
